@@ -104,6 +104,25 @@ AddEventHandler('esx_ecstasy:hasExitedMarker', function(zone)
     TriggerServerEvent('esx_ecstasy:stopSellEcstasy')
 end)
 
+-- Create Blips
+Citizen.CreateThread(function()
+	
+	for i=1, #Config.Map, 1 do
+		
+		local blip = AddBlipForCoord(Config.Map[i].x, Config.Map[i].y, Config.Map[i].z)
+		SetBlipSprite (blip, Config.Map[i].id)
+		SetBlipDisplay(blip, 4)
+		SetBlipColour (blip, Config.Map[i].color)
+		SetBlipScale  (blip, Config.Map[i].scale)
+		SetBlipAsShortRange(blip, true)
+
+		BeginTextCommandSetBlipName("STRING")
+		AddTextComponentString(Config.Map[i].name)
+		EndTextCommandSetBlipName(blip)
+    end
+    
+end)
+
 -- Render markers
 Citizen.CreateThread(function()
     while true do
