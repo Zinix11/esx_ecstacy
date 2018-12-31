@@ -106,21 +106,22 @@ end)
 
 -- Create Blips
 Citizen.CreateThread(function()
-	
-	for i=1, #Config.Map, 1 do
-		
-		local blip = AddBlipForCoord(Config.Map[i].x, Config.Map[i].y, Config.Map[i].z)
-		SetBlipSprite (blip, Config.Map[i].id)
-		SetBlipDisplay(blip, 4)
-		SetBlipColour (blip, Config.Map[i].color)
-		SetBlipScale  (blip, Config.Map[i].scale)
-		SetBlipAsShortRange(blip, true)
-
-		BeginTextCommandSetBlipName("STRING")
-		AddTextComponentString(Config.Map[i].name)
-		EndTextCommandSetBlipName(blip)
-    end
     
+    if myJob ~= "police" then -- Stops Police from seeing markers
+	    for i=1, #Config.Map, 1 do
+		
+		    local blip = AddBlipForCoord(Config.Map[i].x, Config.Map[i].y, Config.Map[i].z)
+		    SetBlipSprite (blip, Config.Map[i].id)
+		    SetBlipDisplay(blip, 4)
+            SetBlipColour (blip, Config.Map[i].color)
+		    SetBlipScale  (blip, Config.Map[i].scale)
+		    SetBlipAsShortRange(blip, true)
+
+		    BeginTextCommandSetBlipName("STRING")
+		    AddTextComponentString(Config.Map[i].name)
+		    EndTextCommandSetBlipName(blip)
+        end
+    end
 end)
 
 -- Render markers
@@ -130,10 +131,11 @@ Citizen.CreateThread(function()
         Wait(0)
 
         local coords = GetEntityCoords(GetPlayerPed(-1))
-
-        for k,v in pairs(Config.Zones) do
-            if(GetDistanceBetweenCoords(coords, v.x, v.y, v.z, true) < Config.DrawDistance) then
-                DrawMarker(Config.MarkerType, v.x, v.y, v.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.ZoneSize.x, Config.ZoneSize.y, Config.ZoneSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
+        if myJob ~= "police" then -- Stops Police from seeing markers
+            for k,v in pairs(Config.Zones) do
+                if(GetDistanceBetweenCoords(coords, v.x, v.y, v.z, true) < Config.DrawDistance) then
+                    DrawMarker(Config.MarkerType, v.x, v.y, v.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.ZoneSize.x, Config.ZoneSize.y, Config.ZoneSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
+                end
             end
         end
     end
